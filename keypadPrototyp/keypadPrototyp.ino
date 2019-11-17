@@ -1,5 +1,7 @@
 #include "Adafruit_Keypad.h"
 
+#define BoxRelais 12
+
 const byte ROWS = 4; // rows
 const byte COLS = 3; // columns
 //define the symbols on the buttons of the keypads
@@ -25,6 +27,7 @@ unsigned long maxIdleTime =8000;
 Adafruit_Keypad customKeypad = Adafruit_Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS);
 
 void setup() {
+  pinMode(BoxRelais, OUTPUT);
   Serial.begin(9600);
   customKeypad.begin();
 
@@ -61,6 +64,7 @@ void confirmInput(){
   }
   if(inputsMatch()){
     Serial.println("OPENED THE GATE");
+    OpenBox();
     resetInput();
   }else{
     Serial.println("WRONG INPUT");
@@ -98,5 +102,11 @@ void resetInput(){
 
 bool inputFull(){
   return !(currentInputIndex<inputSize);
+}
+
+void OpenBox(){
+  digitalWrite(BoxRelais, HIGH);
+  delay(5000);
+  digitalWrite(BoxRelais, LOW);
 }
 
