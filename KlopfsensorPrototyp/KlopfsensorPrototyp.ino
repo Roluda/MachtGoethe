@@ -1,4 +1,6 @@
-#define PIEZO A0
+#define PIEZO A5
+#define BoxRelais A0
+#define DoneOutput A1
 
 float knock_th = 200;
 int currentKnock = 0;
@@ -15,6 +17,8 @@ unsigned long maximumIdleTime = 4000;
 void setup() {
   Serial.begin(9600);
   pinMode(PIEZO, INPUT);
+  pinMode(DoneOutput, OUTPUT);
+  pinMode(BoxRelais, OUTPUT);
 }
 
 void loop() {
@@ -86,6 +90,8 @@ void LetterComplete(){
 
 void Open(){
   Serial.println("YOU FKIN DID IT");
+  digitalWrite(DoneOutput, HIGH);
+  OpenBox();
   Reset();
 }
 
@@ -116,6 +122,12 @@ bool InPattern(unsigned long expectedTime, unsigned long actualTime){
     //Serial.println("PatternMissed");
     return false;
   }
+}
+
+void OpenBox() {
+  digitalWrite(BoxRelais, HIGH);
+  delay(5000);
+  digitalWrite(BoxRelais, LOW);
 }
 
 
