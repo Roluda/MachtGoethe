@@ -16,11 +16,13 @@
 */
 
 #include "pitches.h"
+#define BoxRelais A0;
 
 const int BUTTON1 = 5;
 const int BUTTON2 = 4;
 const int BUTTON3 = 3;
 const int BUTTON4 = 2;
+
 
 // notes in the melody:
 int melody_Button1[] = {
@@ -73,7 +75,7 @@ void setup() {
   pinMode(BUTTON2, INPUT_PULLUP);  
   pinMode(BUTTON3, INPUT_PULLUP);
   pinMode(BUTTON4, INPUT_PULLUP);
-  
+  pinMode(BoxRelais, OUTPUT);
 }
 
 void loop() {
@@ -102,6 +104,7 @@ void loop() {
     playMelodie(melody_Button4, noteDurations_Button4, length_Melody_Button4);
     if (rightMelody == true && beforePlayed == 3) {
       Serial.println("NOICE DU HAST GEWONNEN!!!!!!");
+      OpenBox();
     }
     else {rightMelody = false;}
     beforePlayed = 4;
@@ -132,4 +135,10 @@ void playMelodie(int Notes[], int Duration[], int length_Melody) {
     noTone(8);
   }
   inMelody = false;
+}
+
+void OpenBox() {
+  digitalWrite(BoxRelais, HIGH);
+  delay(5000);
+  digitalWrite(BoxRelais, LOW);
 }
