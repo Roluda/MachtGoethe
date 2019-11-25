@@ -1,7 +1,8 @@
+#define BoxRelais A5
+
 const int inputs[] = {A0, A1, A2, A3, A4};
 const int outputs[] = {3, 5, 6, 9, 10};
 
-#define BoxRelais A7
 
 int measures = 1000;
 unsigned long measureInterval = 2;
@@ -12,6 +13,7 @@ bool isOpen = false;
 
 void setup() {
   pinMode(BoxRelais, OUTPUT);
+  digitalWrite(BoxRelais, HIGH);
 
   Serial.begin(9600);
   for (int i = 0; i < 5; i++) {
@@ -79,8 +81,8 @@ void CompareRatios() {
 }
 
 void OpenBox() {
-  digitalWrite(BoxRelais, HIGH);
-  delay(5000);
   digitalWrite(BoxRelais, LOW);
+  delay(5000);
+  digitalWrite(BoxRelais, HIGH);
 }
 

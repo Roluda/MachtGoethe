@@ -16,12 +16,12 @@
 */
 
 #include "pitches.h"
-#define BoxRelais A0;
+#define BoxRelais A5
 
-const int BUTTON1 = 5;
-const int BUTTON2 = 4;
-const int BUTTON3 = 3;
-const int BUTTON4 = 2;
+const int BUTTON1 = A0;
+const int BUTTON2 = A1;
+const int BUTTON3 = A2;
+const int BUTTON4 = A3;
 
 
 // notes in the melody:
@@ -76,15 +76,19 @@ void setup() {
   pinMode(BUTTON3, INPUT_PULLUP);
   pinMode(BUTTON4, INPUT_PULLUP);
   pinMode(BoxRelais, OUTPUT);
+  digitalWrite(BoxRelais, HIGH);
 }
 
 void loop() {
+  Serial.println(digitalRead(BUTTON1));
   if(digitalRead(BUTTON1)==LOW){
+    Serial.println("Button1");
     playMelodie(melody_Button1, noteDurations_Button1, length_Melody_Button1);
     rightMelody = true;
     beforePlayed = 1;
   }
   if(digitalRead(BUTTON2)==LOW){
+    Serial.println("Button2");
     playMelodie(melody_Button2, noteDurations_Button2, length_Melody_Button2);
     if (rightMelody == true && beforePlayed == 1) {
       Serial.println("NOICE");  
@@ -93,6 +97,7 @@ void loop() {
     beforePlayed = 2;
   }
   if(digitalRead(BUTTON3)==LOW){
+    Serial.println("Button3");
     playMelodie(melody_Button3, noteDurations_Button3, length_Melody_Button3);
     if (rightMelody == true && beforePlayed == 2) {
       Serial.println("GOOD WAY");
@@ -101,6 +106,7 @@ void loop() {
     beforePlayed = 3;
   }
   if(digitalRead(BUTTON4)==LOW){
+    Serial.println("Button4");
     playMelodie(melody_Button4, noteDurations_Button4, length_Melody_Button4);
     if (rightMelody == true && beforePlayed == 3) {
       Serial.println("NOICE DU HAST GEWONNEN!!!!!!");
@@ -138,7 +144,7 @@ void playMelodie(int Notes[], int Duration[], int length_Melody) {
 }
 
 void OpenBox() {
-  digitalWrite(BoxRelais, HIGH);
-  delay(5000);
   digitalWrite(BoxRelais, LOW);
+  delay(5000);
+  digitalWrite(BoxRelais, HIGH);
 }
