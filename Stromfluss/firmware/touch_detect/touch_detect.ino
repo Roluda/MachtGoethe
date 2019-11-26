@@ -26,9 +26,15 @@
 #define PIN_LED_DETECT  A4
 #define PIN_GND_DETECT  A5
 
+#define PIN_BOX_SIGNAL_OUT 2
+#define PIN_PREVIOUS_SOLVED_IN 6
+#define PIN_LOCK_SIGNAL_OUT 4
+
 #define SIGNAL_BIAS      512   // ADC bias level
 #define SIGNAL_THRES     150   // Detection threshold
 #define SIGNAL_DEB_MS    1000  // Debounce time for trigger
+
+
 
 //================================================================
 
@@ -44,6 +50,14 @@ void setup() {
 
   digitalWrite( PIN_GND_DETECT, 0 );
   pinMode( PIN_GND_DETECT, OUTPUT );
+
+  digitalWrite( PIN_BOX_SIGNAL_OUT, 0);
+  pinMode( PIN_BOX_SIGNAL_OUT, OUTPUT);
+
+  digitalWrite( PIN_LOCK_SIGNAL_OUT, 0);
+  pinMode(PIN_LOCK_SIGNAL_OUT, OUTPUT);
+
+  pinMode(PIN_PREVIOUS_SOLVED_IN, INPUT_PULLUP);
 
   analogRead( PIN_SIGNAL_IN );  // To init the pin mode to analog
 
@@ -152,6 +166,13 @@ void loop() {
     else {
       trigger = 0;
     }
+
+    if(trigger){
+      OpenBox();
+      if(digitalRead(PIN_PREVIOUS_SOLVED_IN)==LOW){
+        digitalWrite(PIN_LOCK_SIGNAL_OUT, HIGH);
+      }
+    }
    
     // serial output to plot
     Serial.print(v_on);  
@@ -162,6 +183,11 @@ void loop() {
     Serial.print("  ");
     Serial.print(trigger*100);
     Serial.println();
-  }
-  
+  }  
+}
+
+void OpenBox() {
+  digitalWrite(PIN_BOX_SIGNAL_OUT, LOW);
+  delay(5000);
+  digitalWrite(PIN_BOX_SIGNAL_OUT, HIGH);
 }
