@@ -1,12 +1,12 @@
 //=============================================================================
 // Exit the library (Siegel 7)
 // RFDI detection
-// Detect the presence 6 (or 5) objects with RFID tags at the respective RFID-readers.
+// Detect the presence 5 (or 6) objects with RFID tags at the respective RFID-readers.
 //=============================================================================
 
 // Compile for 
-//   Board: Ardunino Nano
-//   Processor: ATmega328P (Old Bootloader)
+//   Board: Ardunino Uno
+//   Processor: ATmega328P
 
 //=============================================================================
 
@@ -17,14 +17,15 @@
 // RFID config
 
 #define NR_OF_READERS   5
+#define READER_GAIN     7
 
 // Required card UIDs (0 = don't care)
+#define UID_0   0
 #define UID_1   0
 #define UID_2   0
 #define UID_3   0
 #define UID_4   0
 #define UID_5   0
-#define UID_6   0
 
 //=============================================================================
 // Pin mapping
@@ -35,40 +36,41 @@
 #define MOSI_PIN        11
 #define MISO_PIN        12
 
-#define SS_1_PIN        10
-#define SS_2_PIN        8
-#define SS_3_PIN        7
-#define SS_4_PIN        6
-#define SS_5_PIN        5
-#define SS_6_PIN        4
+#define SS_0_PIN        10
+#define SS_1_PIN        8
+#define SS_2_PIN        7
+#define SS_3_PIN        6
+#define SS_4_PIN        5
+#define SS_5_PIN        4
 
-#define LED_1_PIN       A0
-#define LED_2_PIN       A1
-#define LED_3_PIN       A2
-#define LED_4_PIN       A3
-#define LED_5_PIN       A4
-#define LED_6_PIN       A5
+#define LED_0_PIN       A0
+#define LED_1_PIN       A1
+#define LED_2_PIN       A2
+#define LED_3_PIN       A3
+#define LED_4_PIN       A4
+#define LED_5_PIN       A5
 
 #define SUCCESS_OUT_PIN  3
+#define SUCCESS_LED_PIN  LED_5_PIN
 
 //=============================================================================
 
-byte ss_pins[] = {SS_1_PIN, SS_2_PIN, SS_3_PIN, SS_4_PIN, SS_5_PIN, SS_6_PIN};
-byte led_pins[] = {LED_1_PIN, LED_2_PIN, LED_3_PIN, LED_4_PIN, LED_5_PIN, LED_6_PIN};
+byte ss_pins[] = {SS_0_PIN, SS_1_PIN, SS_2_PIN, SS_3_PIN, SS_4_PIN};
+byte led_pins[] = {LED_0_PIN, LED_1_PIN, LED_2_PIN, LED_3_PIN, LED_4_PIN};
 
 MFRC522 mfrc522[NR_OF_READERS];
 
-uint32_t required_uids[] = {UID_1, UID_2, UID_3, UID_4, UID_5, UID_6};
+uint32_t required_uids[] = {UID_0, UID_1, UID_2, UID_3, UID_4};
 bool detect[NR_OF_READERS];
 
 
 //=============================================================================
 
 void setup() {
-  //test_led();
-
   digitalWrite( SUCCESS_OUT_PIN, 0 );
   pinMode( SUCCESS_OUT_PIN, OUTPUT );
+  digitalWrite( SUCCESS_LED_PIN, 0 );
+  pinMode( SUCCESS_LED_PIN, OUTPUT );
 
   // All LEDs off
   for (uint8_t i=0; i<sizeof(led_pins)/sizeof(led_pins[0]); i++) {
@@ -109,35 +111,25 @@ void loop() {
         Serial.print(F("Reader "));  Serial.print(reader);  Serial.print(F(": "));
         mfrc522[reader].PCD_DumpVersionToSerial();
 
-        // NOTE: When setting gain to 7 (maximum) --> No detection
-        // Maximum working gain is 6.
-        //mfrc522[reader].PCD_SetAntennaGain( 6 << 4 );
+        // NOTE: Gain setting 7 only works with modified hardwere and may be not reliably at short distances.
+        mfrc522[reader].PCD_SetAntennaGain( (READER_GAIN) << 4 );
     }
 
     while (1) {
         bool error = 0;
         
-        #if 0
-        static uint32_t t_last = 0;
-        uint32_t t = millis();
-        Serial.println();
-        Serial.println(t - t_last);
-        t_last = t;
-        #endif
-      
         for (uint8_t reader = 0; reader < NR_OF_READERS; reader++) {
             detect[reader] = 0;
-            //Serial.print(F("Reader "));  Serial.print(reader);  Serial.print(F(": "));
 
             // Make sure the reader is working
-            //int ver = read_print_serial( reader );
             int ver = read_serial( reader );
             if (ver != 0x92) {  error = 1;  continue;  }
     
             if (mfrc522[reader].PICC_IsNewCardPresent()  &&
                     mfrc522[reader].PICC_ReadCardSerial()) {
-                Serial.print(F("Reader "));  Serial.print(reader);  Serial.print(F(": "));
-                Serial.print(F("\t\t\tCard UID:"));
+                Serial.print( millis() );  Serial.print(F("\t"));
+                Serial.print(F("Reader: "));  Serial.print(reader);  Serial.print(F("  "));
+                Serial.print(F("UID: "));
                 dump_byte_array(mfrc522[reader].uid.uidByte, mfrc522[reader].uid.size);
                 Serial.print(F("\n"));
 
@@ -163,6 +155,7 @@ void loop() {
           success &= detect[reader];
         }
         digitalWrite(SUCCESS_OUT_PIN, success);
+        digitalWrite(SUCCESS_LED_PIN, success);
 
         // On errors, restart main loop (re-inits all readers)
         if (error) break;
@@ -209,6 +202,46 @@ void dump_byte_array(byte *buffer, byte bufferSize) {
 // ================================================================================
 // Test functions
 
+// First reader
+void test_rfid(void)
+{
+    Serial.begin(115200);  Serial.println(F("Hello"));
+    SPI.begin();
+
+    while (1) {
+        pinMode(ss_pins[0], OUTPUT );
+        digitalWrite(ss_pins[0], 1);  
+        pinMode(RST_PIN, OUTPUT );
+        digitalWrite(RST_PIN, 0);  delay(1);
+        digitalWrite(RST_PIN, 1);  delay(50);
+    
+        mfrc522[0].PCD_Init(ss_pins[0], RST_PIN);
+        mfrc522[0].PCD_DumpVersionToSerial();
+        mfrc522[0].PCD_SetAntennaGain( 7 << 4 );
+        
+        while (1) {
+            detect[0] = 0;
+            int ver = read_serial(0);
+            if (ver != 0x92) {  break; }
+    
+            if (mfrc522[0].PICC_IsNewCardPresent()  &&
+                    mfrc522[0].PICC_ReadCardSerial()) {
+                Serial.print( millis() ); Serial.print(F("\tCard UID:"));
+                dump_byte_array(mfrc522[0].uid.uidByte, mfrc522[0].uid.size);
+                Serial.print(F("\n"));
+                detect[0] = 1;
+            }
+            
+            mfrc522[0].PCD_SoftPowerDown();
+            
+            digitalWrite(led_pins[0], detect[0]);
+            pinMode(led_pins[0], OUTPUT);
+        }
+    }
+}
+
+
+// Blink all LEDs with one second period
 void test_led(void)
 {
   bool on = 1;
