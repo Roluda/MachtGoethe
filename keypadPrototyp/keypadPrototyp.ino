@@ -1,7 +1,7 @@
 #include "Adafruit_Keypad.h"
 
-#define BoxRelais A0
-#define DoneOutput 1
+#define BoxRelais A5
+#define DoneOutput A3
 
 const byte ROWS = 4; // rows
 const byte COLS = 3; // columns
@@ -12,8 +12,8 @@ char keys[ROWS][COLS] = {
   {'7', '8', '9'},
   {'*', '0', '#'}
 };
-byte rowPins[ROWS] = {5, 4, 3, 2}; //connect to the row pinouts of the keypad
-byte colPins[COLS] = {11, 10, 9}; //connect to the column pinouts of the keypad
+byte rowPins[ROWS] = {7, 6, 5, 4}; //connect to the row pinouts of the keypad
+byte colPins[COLS] = {3, 2, 1}; //connect to the column pinouts of the keypad
 
 
 char currentInput[4];
@@ -29,6 +29,7 @@ Adafruit_Keypad customKeypad = Adafruit_Keypad( makeKeymap(keys), rowPins, colPi
 
 void setup() {
   pinMode(BoxRelais, OUTPUT);
+  digitalWrite(BoxRelais, HIGH);
   pinMode(DoneOutput, OUTPUT);
   Serial.begin(9600);
   customKeypad.begin();
@@ -58,8 +59,10 @@ void loop() {
 }
 
 void addCharToInputArray(char newInput) {
+  Serial.println();
   for (int i = 0; i < inputSize - 1; i++) {
     currentInput[i] = currentInput[i + 1];
+    Serial.print(currentInput[i]);
   }
   currentInput[inputSize-1] = newInput;
 }
@@ -74,9 +77,9 @@ bool inputsMatch() {
 }
 
 void OpenBox() {
-  digitalWrite(BoxRelais, HIGH);
-  delay(5000);
   digitalWrite(BoxRelais, LOW);
+  delay(5000);
+  digitalWrite(BoxRelais, HIGH);
 }
 
 void confirmInput() {

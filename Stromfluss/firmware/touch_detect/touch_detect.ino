@@ -51,7 +51,7 @@ void setup() {
   digitalWrite( PIN_GND_DETECT, 0 );
   pinMode( PIN_GND_DETECT, OUTPUT );
 
-  digitalWrite( PIN_BOX_SIGNAL_OUT, 0);
+  digitalWrite( PIN_BOX_SIGNAL_OUT, 1);
   pinMode( PIN_BOX_SIGNAL_OUT, OUTPUT);
 
   digitalWrite( PIN_LOCK_SIGNAL_OUT, 0);
