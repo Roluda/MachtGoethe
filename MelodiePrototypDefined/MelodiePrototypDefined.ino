@@ -34,44 +34,38 @@ const int BUTTON4 = 13;
 
 // notes in the melody:
 int melody_Button1[] = {
-  NOTE_FS4, NOTE_FS4, NOTE_A4, NOTE_G4, NOTE_FS4,   NOTE_E4, NOTE_E4, NOTE_E4, 0,    NOTE_FS4, NOTE_FS4, NOTE_G4, NOTE_A4, NOTE_B4, NOTE_B4, 0, NOTE_A4, 0
+  NOTE_FS4, NOTE_FS4, NOTE_A4, NOTE_G4, NOTE_FS4,   NOTE_E4, NOTE_E4, NOTE_E4, 0
 };
-
 // note durations: 4 = quarter note, 8 = eighth note, etc.:
 int noteDurations_Button1[] = {
-  4, 8, 8, 8, 8,   4, 8, 4, 8,     4, 8, 8, 8, 8, 4, 8, 4, 8
+  4, 8, 8, 8, 8,   4, 8, 4, 8,
 };
+int length_Melody_Button1 = 9;
 
-int length_Melody_Button1 = 18;
 
 int melody_Button2[] = {
-  NOTE_A4, NOTE_G4, NOTE_FS4, NOTE_FS4,     NOTE_FS4,   NOTE_E4, NOTE_D4, 0,    NOTE_D4, NOTE_D4, NOTE_D4, NOTE_E4, NOTE_FS4, NOTE_G4, NOTE_FS4, NOTE_E4, 0
+  NOTE_FS4, NOTE_FS4, NOTE_G4, NOTE_A4, NOTE_B4, NOTE_B4, 0, NOTE_A4, 0
 };
-
 int noteDurations_Button2[] = {
-  4, 8, 4, 8,  4, 8, 4, 8,     4, 8, 8, 8, 8,    4, 8, 4, 8
+  4, 8, 8, 8, 8, 4, 8, 4, 8
 };
-
-int length_Melody_Button2 = 17;
+int length_Melody_Button2 = 9;
 
 int melody_Button3[] = {
-  NOTE_FS4, NOTE_FS4, NOTE_A4, NOTE_G4, NOTE_FS4,   NOTE_FS4, 0, NOTE_E4, 0
+  NOTE_A4, NOTE_G4, NOTE_FS4, NOTE_FS4, NOTE_FS4, NOTE_E4, NOTE_D4, 0
 };
-
 int noteDurations_Button3[] = {
-  4, 8, 8, 8, 8,    4, 8, 4, 8
+  4, 8, 4, 8,  4, 8, 4, 8
 };
-
-int length_Melody_Button3 = 9;
+int length_Melody_Button3 = 8;
 
 int melody_Button4[] = {
-  NOTE_FS4, NOTE_A4, NOTE_B4, NOTE_B4,     NOTE_A4,   NOTE_B4, NOTE_CS5, NOTE_D5, 0, NOTE_D5, NOTE_B4, NOTE_A4, NOTE_FS4, NOTE_E4, 0, NOTE_FS4, NOTE_E4, NOTE_D4
+  NOTE_D4, NOTE_D4, NOTE_D4, NOTE_E4, NOTE_FS4, NOTE_G4, NOTE_FS4, NOTE_E4, 0
 };
-
 int noteDurations_Button4[] = {
-  4, 8, 4, 8,  8, 8, 8, 4, 8,     4, 8, 4, 8,    8, 16, 16, 8, 4
+  4, 8, 8, 8, 8, 4, 8, 4, 8
 };
-int length_Melody_Button4 = 18;
+int length_Melody_Button4 = 9;
 
 bool inMelody = false;
 bool rightMelody = false;
@@ -180,7 +174,7 @@ void playMelodie(int Notes[], int Duration[], int length_Melody) {
     // to calculate the note duration, take one second divided by the note type.
     //e.g. quarter note = 1000 / 4, eighth note = 1000/8, etc.
     int noteDuration = 2000 / Duration[thisNote];
-    tone(8, Notes[thisNote], noteDuration);
+    tone(8, Notes[thisNote]*2 , noteDuration);
 
     // to distinguish the notes, set a minimum time between them.
     // the note's duration + 30% seems to work well:

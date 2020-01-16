@@ -32,6 +32,7 @@
 
 #define RST_PIN         9           // Configurable, see typical pin layout above
 #define SS_PIN          10          // Configurable, see typical pin layout above
+#define END_PIN 5
 
 MFRC522 mfrc522(SS_PIN, RST_PIN);   // Create MFRC522 instance.
 
@@ -54,19 +55,16 @@ byte size = sizeof(buffer);
 */
 void setup() {
   Serial.begin(9600); // Initialize serial communications with the PC
-  while (!Serial);    // Do nothing if no serial port is opened (added for Arduinos based on ATMEGA32U4)
   SPI.begin();        // Init SPI bus
   mfrc522.PCD_Init(); // Init MFRC522 card
 
+  pinMode(END_PIN, OUTPUT);
   // Prepare the key (used both as key A and as key B)
   // using FFFFFFFFFFFFh which is the default at chip delivery from the factory
   for (byte i = 0; i < 6; i++) {
     key.keyByte[i] = 0xFF;
   }
-
-  Serial.println(F("Scan a MIFARE Classic PICC to demonstrate read and write."));
-  Serial.print(F("Using key (for A and B):"));
-  dump_byte_array(key.keyByte, MFRC522::MF_KEY_SIZE);
+  
   Serial.println();
 }
 
@@ -125,6 +123,7 @@ void loop() {
   Serial.println();
 
   if (compare_to_expected()) {
+    digitalWrite(END_PIN, HIGH);
     Serial.println("FINAL STONE INSERTED");
   }else{
     Serial.println("WRONG STONE");
