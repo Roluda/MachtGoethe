@@ -1,16 +1,16 @@
 #define PIEZO A5
-#define BoxRelais A0
+#define BoxRelais A3
 #define DoneOutput A1
 
-float knock_th = 200;
+float knock_th = 100;
 int currentKnock = 0;
-int pattern[] = {0,1,1,0,2,2,0,1,1,0,2,2,0,1,1,3}; //0 = any delta to last; 1= short delta to last, 2= long delta to last , 3=end
+int pattern[] = {0, 0, 0,0,0, 0,0,0,0, 0, 0,0,0,0,3}; //0 = any delta to last; 1= short delta to last, 2= long delta to last , 3=end
 unsigned long shortKnock = 0;
 unsigned long longKnock =0;
 unsigned long lastKnock = 0;
 unsigned long knockDelta = 0;
-float toleranceFactor = 0.3;
-float shortToLongFactor = 2;
+float toleranceFactor = 1;
+float shortToLongFactor = 1.3;
 
 unsigned long maximumIdleTime = 4000;
 
@@ -19,6 +19,7 @@ void setup() {
   pinMode(PIEZO, INPUT);
   pinMode(DoneOutput, OUTPUT);
   pinMode(BoxRelais, OUTPUT);
+  digitalWrite(BoxRelais, HIGH);
 }
 
 void loop() {
@@ -65,7 +66,7 @@ bool CheckKnock(){
   float knockValue=analogRead(PIEZO);
   if(knockValue >= knock_th){
     Serial.println("KNOCK: " + String(currentKnock));
-    delay(50);
+    delay(20);
     return true;
   }else{
     return false;
@@ -125,9 +126,9 @@ bool InPattern(unsigned long expectedTime, unsigned long actualTime){
 }
 
 void OpenBox() {
-  digitalWrite(BoxRelais, HIGH);
-  delay(5000);
   digitalWrite(BoxRelais, LOW);
+  delay(5000);
+  digitalWrite(BoxRelais, HIGH);
 }
 
 

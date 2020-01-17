@@ -16,107 +16,150 @@
 */
 
 #include "pitches.h"
-#define BoxRelais A5
+#define BoxRelais 6
+#define FinalStart 4
 
-const int BUTTON1 = A0;
-const int BUTTON2 = A1;
-const int BUTTON3 = A2;
-const int BUTTON4 = A3;
+#define LED1R A0
+#define LED1G A1
+#define LED1B A2
+#define LED2R A5
+#define LED2G A4
+#define LED2B A3
+
+const int BUTTON1 = 10;
+const int BUTTON2 = 11;
+const int BUTTON3 = 12;
+const int BUTTON4 = 13;
 
 
 // notes in the melody:
 int melody_Button1[] = {
-  NOTE_FS4, NOTE_FS4, NOTE_A4, NOTE_G4, NOTE_FS4,   NOTE_E4, NOTE_E4, NOTE_E4, 0,    NOTE_FS4, NOTE_FS4, NOTE_G4, NOTE_A4, NOTE_B4, NOTE_B4, 0, NOTE_A4, 0
+  NOTE_FS4, NOTE_FS4, NOTE_A4, NOTE_G4, NOTE_FS4,   NOTE_E4, NOTE_E4, NOTE_E4, 0
 };
-
 // note durations: 4 = quarter note, 8 = eighth note, etc.:
 int noteDurations_Button1[] = {
-  4, 8, 8, 8, 8,   4, 8, 4, 8,     4, 8, 8, 8, 8, 4, 8, 4,8
+  4, 8, 8, 8, 8,   4, 8, 4, 8,
 };
+int length_Melody_Button1 = 9;
 
-int length_Melody_Button1 = 18;
 
 int melody_Button2[] = {
-  NOTE_A4, NOTE_G4, NOTE_FS4, NOTE_FS4,     NOTE_FS4,   NOTE_E4, NOTE_D4, 0,    NOTE_D4, NOTE_D4, NOTE_D4, NOTE_E4, NOTE_FS4, NOTE_G4, NOTE_FS4, NOTE_E4,0
+  NOTE_FS4, NOTE_FS4, NOTE_G4, NOTE_A4, NOTE_B4, NOTE_B4, 0, NOTE_A4, 0
 };
-
 int noteDurations_Button2[] = {
-  4, 8, 4, 8,  4, 8, 4, 8,     4, 8, 8, 8, 8,    4, 8, 4, 8
+  4, 8, 8, 8, 8, 4, 8, 4, 8
 };
-
-int length_Melody_Button2 = 17;
+int length_Melody_Button2 = 9;
 
 int melody_Button3[] = {
-  NOTE_FS4, NOTE_FS4, NOTE_A4, NOTE_G4, NOTE_FS4,   NOTE_FS4, 0, NOTE_E4, 0
+  NOTE_A4, NOTE_G4, NOTE_FS4, NOTE_FS4, NOTE_FS4, NOTE_E4, NOTE_D4, 0
 };
-
 int noteDurations_Button3[] = {
-  4, 8, 8, 8, 8,    4,8,4, 8
+  4, 8, 4, 8,  4, 8, 4, 8
 };
-
-int length_Melody_Button3 = 9;
+int length_Melody_Button3 = 8;
 
 int melody_Button4[] = {
-  NOTE_FS4, NOTE_A4, NOTE_B4, NOTE_B4,     NOTE_A4,   NOTE_B4, NOTE_CS5, NOTE_D5, 0, NOTE_D5, NOTE_B4, NOTE_A4, NOTE_FS4, NOTE_E4, 0, NOTE_FS4, NOTE_E4, NOTE_D4
+  NOTE_D4, NOTE_D4, NOTE_D4, NOTE_E4, NOTE_FS4, NOTE_G4, NOTE_FS4, NOTE_E4, 0
 };
-
 int noteDurations_Button4[] = {
-  4, 8, 4, 8,  8, 8, 8, 4,8,     4, 8, 4, 8,    8, 16, 16, 8, 4
+  4, 8, 8, 8, 8, 4, 8, 4, 8
 };
-int length_Melody_Button4 = 18;
+int length_Melody_Button4 = 9;
 
 bool inMelody = false;
 bool rightMelody = false;
+bool finalStarted = false;
 int beforePlayed = 0;
 
 void setup() {
   Serial.begin(9600);
+  pinMode(LED1R, OUTPUT);
+  pinMode(LED1G, OUTPUT);
+  pinMode(LED1B, OUTPUT);
+  pinMode(LED2R, OUTPUT);
+  pinMode(LED2G, OUTPUT);
+  pinMode(LED2B, OUTPUT);
   pinMode(BUTTON1, INPUT_PULLUP);
-  pinMode(BUTTON2, INPUT_PULLUP);  
+  pinMode(BUTTON2, INPUT_PULLUP);
   pinMode(BUTTON3, INPUT_PULLUP);
   pinMode(BUTTON4, INPUT_PULLUP);
   pinMode(BoxRelais, OUTPUT);
+  pinMode(FinalStart, INPUT);
   digitalWrite(BoxRelais, HIGH);
+  analogWrite(LED1R, 255);
+  analogWrite(LED2R, 255);
 }
 
 void loop() {
-  Serial.println(digitalRead(BUTTON1));
-  if(digitalRead(BUTTON1)==LOW){
-    Serial.println("Button1");
-    playMelodie(melody_Button1, noteDurations_Button1, length_Melody_Button1);
-    rightMelody = true;
-    beforePlayed = 1;
-  }
-  if(digitalRead(BUTTON2)==LOW){
-    Serial.println("Button2");
-    playMelodie(melody_Button2, noteDurations_Button2, length_Melody_Button2);
-    if (rightMelody == true && beforePlayed == 1) {
-      Serial.println("NOICE");  
+  if (!finalStarted) {
+    if (digitalRead(FinalStart)) {
+      finalStarted = true;
+      analogWrite(LED1G, 255);
+      analogWrite(LED1R, 55);
+      analogWrite(LED2G, 255);
+      analogWrite(LED2R, 55);
     }
-    else {rightMelody = false;}
-    beforePlayed = 2;
-  }
-  if(digitalRead(BUTTON3)==LOW){
-    Serial.println("Button3");
-    playMelodie(melody_Button3, noteDurations_Button3, length_Melody_Button3);
-    if (rightMelody == true && beforePlayed == 2) {
-      Serial.println("GOOD WAY");
+    if (digitalRead(BUTTON1) == LOW) {
+      tone(8, NOTE_G2, 1000);
+      delay(1000);
     }
-    else {rightMelody = false;}
-    beforePlayed = 3;
-  }
-  if(digitalRead(BUTTON4)==LOW){
-    Serial.println("Button4");
-    playMelodie(melody_Button4, noteDurations_Button4, length_Melody_Button4);
-    if (rightMelody == true && beforePlayed == 3) {
-      Serial.println("NOICE DU HAST GEWONNEN!!!!!!");
-      OpenBox();
+    if (digitalRead(BUTTON2) == LOW) {
+      tone(8, NOTE_G2, 1000);
+      delay(1000);
     }
-    else {rightMelody = false;}
-    beforePlayed = 4;
+    if (digitalRead(BUTTON3) == LOW) {
+      tone(8, NOTE_G2, 1000);
+      delay(1000);
+    }
+    if (digitalRead(BUTTON4) == LOW) {
+      tone(8, NOTE_G2, 1000);
+      delay(1000);
+    }
   }
-  
-  
+  if (finalStarted) {
+    Serial.println(digitalRead(BUTTON1));
+    if (digitalRead(BUTTON1) == LOW) {
+      Serial.println("Button1");
+      playMelodie(melody_Button1, noteDurations_Button1, length_Melody_Button1);
+      rightMelody = true;
+      beforePlayed = 1;
+    }
+    if (digitalRead(BUTTON2) == LOW) {
+      Serial.println("Button2");
+      playMelodie(melody_Button2, noteDurations_Button2, length_Melody_Button2);
+      if (rightMelody == true && beforePlayed == 1) {
+        Serial.println("NOICE");
+      }
+      else {
+        rightMelody = false;
+      }
+      beforePlayed = 2;
+    }
+    if (digitalRead(BUTTON3) == LOW) {
+      Serial.println("Button3");
+      playMelodie(melody_Button3, noteDurations_Button3, length_Melody_Button3);
+      if (rightMelody == true && beforePlayed == 2) {
+        Serial.println("GOOD WAY");
+      }
+      else {
+        rightMelody = false;
+      }
+      beforePlayed = 3;
+    }
+    if (digitalRead(BUTTON4) == LOW) {
+      Serial.println("Button4");
+      playMelodie(melody_Button4, noteDurations_Button4, length_Melody_Button4);
+      if (rightMelody == true && beforePlayed == 3) {
+        Serial.println("NOICE DU HAST GEWONNEN!!!!!!");
+        OpenBox();
+      }
+      else {
+        rightMelody = false;
+      }
+      beforePlayed = 4;
+    }
+  }
   // no need to repeat the melody.
 }
 
@@ -131,7 +174,7 @@ void playMelodie(int Notes[], int Duration[], int length_Melody) {
     // to calculate the note duration, take one second divided by the note type.
     //e.g. quarter note = 1000 / 4, eighth note = 1000/8, etc.
     int noteDuration = 2000 / Duration[thisNote];
-    tone(8, Notes[thisNote], noteDuration);
+    tone(8, Notes[thisNote]*2 , noteDuration);
 
     // to distinguish the notes, set a minimum time between them.
     // the note's duration + 30% seems to work well:
