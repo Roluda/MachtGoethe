@@ -4,9 +4,7 @@
 #define PHOTOSENSOR_RED A3
 #define PHOTOSENSOR_BLUE A4
 #define SUMMER 2
-#define BoxRelais 10
-#define DoneInput 12
-#define BigRelais 8
+#define BOX 10
 
 int sensorValueGreen = 0;
 int sensorValueRed = 0;
@@ -20,17 +18,14 @@ bool solved = false;
 void setup() {
   // put your setup code here, to run once:
   pinMode(SUMMER, OUTPUT);
-  pinMode(BoxRelais, OUTPUT);
-  digitalWrite(BoxRelais, HIGH);
-  pinMode(BigRelais, OUTPUT);
-  digitalWrite(BoxRelais, HIGH);
+  pinMode(BOX, OUTPUT);
+  digitalWrite(BOX, HIGH);
   Serial.begin(9600);
 }
 
 void loop() {
   delay(1000);
-  if (solved && digitalRead(DoneInput)) {
-    OpenBigMagnet();
+  if (solved) {
     solved = false;
   }
   // put your main code here, to run repeatedly:
@@ -82,14 +77,8 @@ void Beep(int milliseconds) {
 }
 
 void OpenBox() {
-  digitalWrite(BoxRelais, LOW);
+  digitalWrite(BOX, LOW);
   delay(5000);
-  digitalWrite(BoxRelais, HIGH);
-}
-
-void OpenBigMagnet() {
-  digitalWrite(BigRelais, LOW);
-  delay(1000);
-  digitalWrite(BigRelais, HIGH);
+  digitalWrite(BOX, HIGH);
 }
 
