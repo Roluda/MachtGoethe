@@ -9562,6 +9562,7 @@ Source: &lt;a href="http://www.irf.com/product-info/datasheets/data/irf8313pbf.p
 <part name="C2" library="rcl" deviceset="C-EU" device="C1206" value="10u"/>
 <part name="C4" library="rcl" deviceset="C-EU" device="C1206" value="10u"/>
 <part name="X1" library="con-wago-508" deviceset="W237-02P" device="" value="12V supply"/>
+<part name="P+4" library="supply1" deviceset="V+" device=""/>
 <part name="GND8" library="supply1" deviceset="GND" device=""/>
 <part name="M1" library="00_sm_arduino" deviceset="ARDUINO_R3" device="_SMALL"/>
 <part name="C11" library="rcl" deviceset="C-EU" device="C1206" value="10u"/>
@@ -9572,6 +9573,7 @@ Source: &lt;a href="http://www.irf.com/product-info/datasheets/data/irf8313pbf.p
 <part name="R20" library="rcl" deviceset="R-EU_" device="R0805" value="220"/>
 <part name="R26" library="rcl" deviceset="R-EU_" device="R0805" value="220"/>
 <part name="P+5" library="supply1" deviceset="+5V" device=""/>
+<part name="P+6" library="supply1" deviceset="V+" device=""/>
 <part name="GND16" library="supply1" deviceset="GND" device=""/>
 <part name="R27" library="rcl" deviceset="R-EU_" device="R0805" value="220"/>
 <part name="R29" library="rcl" deviceset="R-EU_" device="R0805" value="220"/>
@@ -9595,8 +9597,8 @@ Source: &lt;a href="http://www.irf.com/product-info/datasheets/data/irf8313pbf.p
 <part name="IC1" library="sm_ilec_supply" deviceset="VREG" device="_TO220L_A" value="LM1086-ADJ"/>
 <part name="C3" library="rcl" deviceset="C-EU" device="C1206" value="10u"/>
 <part name="GND27" library="supply1" deviceset="GND" device=""/>
-<part name="R16" library="rcl" deviceset="R-EU_" device="R0805" value="132"/>
-<part name="R28" library="rcl" deviceset="R-EU_" device="R0805" value="1k1"/>
+<part name="R16" library="rcl" deviceset="R-EU_" device="R0805" value="132 (220||330)"/>
+<part name="R28" library="rcl" deviceset="R-EU_" device="R0805" value="1k1 (2k2||2k2)"/>
 <part name="GND28" library="supply1" deviceset="GND" device=""/>
 <part name="JP1" library="pinhead" deviceset="PINHD-1X3" device="/90"/>
 <part name="R1" library="rcl" deviceset="R-EU_" device="R0805" value="1k"/>
@@ -9656,22 +9658,8 @@ supply current. For single readers, the regulator can
 be dropped.</text>
 <text x="284.48" y="355.6" size="1.778" layer="90">TODO for next version:
 Add pull-down to outputs</text>
-<text x="-5.08" y="246.38" size="1.778" layer="90">TODO for next version:
-Add MOSFET-reverse-
-polarity protection.</text>
-<text x="251.46" y="325.12" size="1.778" layer="90">TODO for next version:
-Connect UNO Vin to
-12V supply, not V_LED</text>
-<text x="38.1" y="266.7" size="1.778" layer="90">V_LED regulator:
-12V:
-  R16=132 = 220||330
-  R28=1k1=2k2/2
-3.5V:
-  R16=100R
-  R28=180=220||1k</text>
-<text x="424.18" y="332.74" size="1.778" layer="90">Resistors for RGB-LED:
-Red: 4.5R=20/4 || 47, 1/4W
-Green/Blue: 1R=2R/2,1/8W</text>
+<text x="20.32" y="269.24" size="1.778" layer="90">TODO for next version:
+Add MOSFET-reverse-polarity protection.</text>
 </plain>
 <instances>
 <instance part="P+2" gate="1" x="20.32" y="325.12" rot="R90"/>
@@ -9682,6 +9670,7 @@ Green/Blue: 1R=2R/2,1/8W</text>
 <instance part="C4" gate="G$1" x="30.48" y="322.58"/>
 <instance part="X1" gate="-1" x="22.86" y="256.54" rot="MR180"/>
 <instance part="X1" gate="-2" x="22.86" y="261.62" rot="MR180"/>
+<instance part="P+4" gate="1" x="99.06" y="261.62" rot="R270"/>
 <instance part="GND8" gate="1" x="33.02" y="246.38"/>
 <instance part="M1" gate="G$1" x="220.98" y="287.02" rot="R90"/>
 <instance part="C11" gate="G$1" x="73.66" y="256.54"/>
@@ -9704,6 +9693,7 @@ Green/Blue: 1R=2R/2,1/8W</text>
 <attribute name="VALUE" x="146.812" y="305.054" size="1.778" layer="96" rot="MR0"/>
 </instance>
 <instance part="P+5" gate="1" x="251.46" y="317.5" rot="R270"/>
+<instance part="P+6" gate="1" x="251.46" y="325.12" rot="R270"/>
 <instance part="GND16" gate="1" x="238.76" y="309.88"/>
 <instance part="R27" gate="G$1" x="149.86" y="294.64" smashed="yes" rot="MR180">
 <attribute name="NAME" x="157.988" y="294.8686" size="1.778" layer="95" rot="MR0"/>
@@ -10200,14 +10190,15 @@ Green/Blue: 1R=2R/2,1/8W</text>
 <wire x1="248.92" y1="317.5" x2="226.06" y2="317.5" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="V_LED" class="0">
+<net name="V+" class="0">
 <segment>
+<pinref part="P+4" gate="1" pin="V+"/>
 <wire x1="60.96" y1="261.62" x2="66.04" y2="261.62" width="0.1524" layer="91"/>
 <wire x1="66.04" y1="261.62" x2="73.66" y2="261.62" width="0.1524" layer="91"/>
 <wire x1="73.66" y1="261.62" x2="81.28" y2="261.62" width="0.1524" layer="91"/>
 <wire x1="81.28" y1="261.62" x2="88.9" y2="261.62" width="0.1524" layer="91"/>
 <pinref part="C11" gate="G$1" pin="1"/>
-<wire x1="88.9" y1="261.62" x2="101.6" y2="261.62" width="0.1524" layer="91"/>
+<wire x1="88.9" y1="261.62" x2="96.52" y2="261.62" width="0.1524" layer="91"/>
 <wire x1="73.66" y1="259.08" x2="73.66" y2="261.62" width="0.1524" layer="91"/>
 <junction x="73.66" y="261.62"/>
 <pinref part="C12" gate="G$1" pin="1"/>
@@ -10219,12 +10210,11 @@ Green/Blue: 1R=2R/2,1/8W</text>
 <pinref part="C5" gate="G$1" pin="1"/>
 <wire x1="88.9" y1="259.08" x2="88.9" y2="261.62" width="0.1524" layer="91"/>
 <junction x="88.9" y="261.62"/>
-<label x="91.44" y="261.62" size="1.778" layer="95"/>
 </segment>
 <segment>
+<pinref part="P+6" gate="1" pin="V+"/>
 <pinref part="D1" gate="G$1" pin="A"/>
 <wire x1="238.76" y1="325.12" x2="248.92" y2="325.12" width="0.1524" layer="91"/>
-<label x="241.3" y="325.12" size="1.778" layer="95"/>
 </segment>
 <segment>
 <pinref part="R9" gate="G$1" pin="2"/>

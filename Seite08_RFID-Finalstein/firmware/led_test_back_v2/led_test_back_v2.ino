@@ -12,14 +12,15 @@
 #define LED_1_PIN       10    // PWM T1B
 #define LED_2_PIN        3    // PWM T2B
 #define LED_3_PIN        6    // PWM T0A
-#define LED_4_PIN       A0
-#define LED_5_PIN       A1
+
+#define SW_1_PIN       A0
+#define SW_2_PIN       A1
 
 #define SUCCESS_OUT_PIN  A3
 
 //=============================================================================
 
-byte led_pins[] = {LED_0_PIN, LED_1_PIN, LED_2_PIN, LED_3_PIN, LED_4_PIN, LED_5_PIN, SUCCESS_OUT_PIN};
+byte led_pins[] = {LED_0_PIN, LED_1_PIN, LED_2_PIN, LED_3_PIN, SUCCESS_OUT_PIN};
 
 //=============================================================================
 

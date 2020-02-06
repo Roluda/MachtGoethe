@@ -8000,8 +8000,8 @@ Source: www.kingbright.com</description>
 <part name="M1" library="00_sm_arduino" deviceset="ARDUINO_R3" device="_SMALL"/>
 <part name="P+5" library="supply1" deviceset="+5V" device=""/>
 <part name="GND16" library="supply1" deviceset="GND" device=""/>
-<part name="R7" library="rcl" deviceset="R-EU_" device="R0805" value="1k"/>
-<part name="R8" library="rcl" deviceset="R-EU_" device="R0805" value="1k"/>
+<part name="R7" library="rcl" deviceset="R-EU_" device="0204/7" value="1k"/>
+<part name="R8" library="rcl" deviceset="R-EU_" device="0207/12" value="100"/>
 <part name="LED7" library="led" deviceset="LED" device="3MM"/>
 <part name="GND18" library="supply1" deviceset="GND" device=""/>
 <part name="FRAME2" library="frames" deviceset="DINA4_L" device=""/>
@@ -8015,6 +8015,7 @@ Source: www.kingbright.com</description>
 <part name="GND1" library="supply1" deviceset="GND" device=""/>
 <part name="GND2" library="supply1" deviceset="GND" device=""/>
 <part name="P+1" library="supply1" deviceset="+5V" device=""/>
+<part name="P+2" library="supply1" deviceset="+5V" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -8036,7 +8037,7 @@ Source: www.kingbright.com</description>
 <instance part="GND18" gate="1" x="180.34" y="266.7"/>
 <instance part="FRAME2" gate="G$1" x="0" y="185.42"/>
 <instance part="FRAME2" gate="G$2" x="162.56" y="185.42"/>
-<instance part="JP1" gate="A" x="167.64" y="276.86" rot="R180"/>
+<instance part="JP1" gate="A" x="167.64" y="279.4" rot="R180"/>
 <instance part="JP2" gate="A" x="35.56" y="337.82" rot="R180"/>
 <instance part="R1" gate="G$1" x="63.5" y="350.52" rot="R180"/>
 <instance part="R2" gate="G$1" x="63.5" y="317.5" rot="R180"/>
@@ -8046,6 +8047,7 @@ Source: www.kingbright.com</description>
 <instance part="GND1" gate="1" x="73.66" y="302.26"/>
 <instance part="GND2" gate="1" x="83.82" y="302.26"/>
 <instance part="P+1" gate="1" x="73.66" y="335.28"/>
+<instance part="P+2" gate="1" x="180.34" y="289.56"/>
 </instances>
 <busses>
 </busses>
@@ -8066,14 +8068,10 @@ Source: www.kingbright.com</description>
 <pinref part="GND18" gate="1" pin="GND"/>
 <wire x1="180.34" y1="269.24" x2="180.34" y2="271.78" width="0.1524" layer="91"/>
 <wire x1="180.34" y1="271.78" x2="185.42" y2="271.78" width="0.1524" layer="91"/>
-<pinref part="JP1" gate="A" pin="1"/>
-<wire x1="170.18" y1="274.32" x2="180.34" y2="274.32" width="0.1524" layer="91"/>
-<wire x1="180.34" y1="274.32" x2="180.34" y2="271.78" width="0.1524" layer="91"/>
 <junction x="180.34" y="271.78"/>
-<wire x1="180.34" y1="274.32" x2="180.34" y2="279.4" width="0.1524" layer="91"/>
-<junction x="180.34" y="274.32"/>
-<pinref part="JP1" gate="A" pin="3"/>
-<wire x1="180.34" y1="279.4" x2="170.18" y2="279.4" width="0.1524" layer="91"/>
+<wire x1="180.34" y1="271.78" x2="180.34" y2="279.4" width="0.1524" layer="91"/>
+<pinref part="JP1" gate="A" pin="2"/>
+<wire x1="170.18" y1="279.4" x2="180.34" y2="279.4" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="R3" gate="G$1" pin="2"/>
@@ -8096,6 +8094,12 @@ Source: www.kingbright.com</description>
 <pinref part="P+1" gate="1" pin="+5V"/>
 <wire x1="73.66" y1="332.74" x2="73.66" y2="330.2" width="0.1524" layer="91"/>
 </segment>
+<segment>
+<pinref part="JP1" gate="A" pin="3"/>
+<wire x1="170.18" y1="281.94" x2="180.34" y2="281.94" width="0.1524" layer="91"/>
+<wire x1="180.34" y1="281.94" x2="180.34" y2="287.02" width="0.1524" layer="91"/>
+<pinref part="P+2" gate="1" pin="+5V"/>
+</segment>
 </net>
 <net name="SUCCESS_OUT" class="0">
 <segment>
@@ -8108,19 +8112,17 @@ Source: www.kingbright.com</description>
 <wire x1="208.28" y1="271.78" x2="233.68" y2="271.78" width="0.1524" layer="91"/>
 <label x="210.82" y="271.78" size="1.778" layer="95"/>
 </segment>
+<segment>
+<wire x1="25.4" y1="248.92" x2="50.8" y2="248.92" width="0.1524" layer="91"/>
+<label x="27.94" y="248.92" size="1.778" layer="95"/>
+<pinref part="M1" gate="G$1" pin="D2"/>
+</segment>
 </net>
 <net name="N$8" class="0">
 <segment>
 <pinref part="LED7" gate="G$1" pin="A"/>
 <pinref part="R7" gate="G$1" pin="2"/>
 <wire x1="193.04" y1="271.78" x2="195.58" y2="271.78" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="SUCCESS_OUT_" class="0">
-<segment>
-<pinref part="R8" gate="G$1" pin="2"/>
-<wire x1="195.58" y1="276.86" x2="170.18" y2="276.86" width="0.1524" layer="91"/>
-<pinref part="JP1" gate="A" pin="2"/>
 </segment>
 </net>
 <net name="MEAS_OUT" class="0">
@@ -8181,6 +8183,13 @@ Source: www.kingbright.com</description>
 <junction x="40.64" y="332.74"/>
 <pinref part="R2" gate="G$1" pin="2"/>
 <wire x1="40.64" y1="317.5" x2="58.42" y2="317.5" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$2" class="0">
+<segment>
+<pinref part="JP1" gate="A" pin="1"/>
+<pinref part="R8" gate="G$1" pin="2"/>
+<wire x1="170.18" y1="276.86" x2="195.58" y2="276.86" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
