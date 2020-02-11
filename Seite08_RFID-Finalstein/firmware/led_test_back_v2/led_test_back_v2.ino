@@ -157,19 +157,19 @@ void pwm_init(void)
   // Increase PWM frequency
   #ifdef TCCR0B
     // NOTE: Do not change Timer 0 settings, since it controls some Arduino internals.
-    //TCCR0B = TCCR0B & 0b11111000 | 1;  // Timer 0 clk div 1
+    //TCCR0B = (TCCR0B & 0b11111000) | 1;  // Timer 0 clk div 1
   #endif
   #ifdef TCCR1B
-      TCCR1B = TCCR1B & 0b11111000 | 1;  // Timer 1 clk div 1
+      TCCR1B = (TCCR1B & 0b11111000) | 1;  // Timer 1 clk div 1
   #endif
   #ifdef TCCR2B
-      TCCR2B = TCCR2B & 0b11111000 | 1;  // Timer 2 clk div 1
+      TCCR2B = (TCCR2B & 0b11111000) | 1;  // Timer 2 clk div 1
   #endif
   #ifdef TCCR3B
-    TCCR3B = TCCR3B & 0b11111000 | 1;  // Timer 3 clk div 1
+    TCCR3B = (TCCR3B & 0b11111000) | 1;  // Timer 3 clk div 1
   #endif
   #ifdef TCCR4B
-    TCCR4B = TCCR4B & 0b11110000 | 1;  // Timer 4 clk div 1
+    TCCR4B = (TCCR4B & 0b11110000) | 1;  // Timer 4 clk div 1
   #endif  
 }
 
