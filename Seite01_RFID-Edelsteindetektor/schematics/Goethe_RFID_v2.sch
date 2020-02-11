@@ -9672,6 +9672,11 @@ Connect UNO Vin to
 <text x="424.18" y="332.74" size="1.778" layer="90">Resistors for RGB-LED:
 Red: 4.5R=20/4 || 47, 1/4W
 Green/Blue: 1R=2R/2,1/8W</text>
+<text x="251.46" y="332.74" size="1.778" layer="90">Drop D1 to allow shield to be 
+supplied from the Unos Vin.</text>
+<text x="-25.4" y="266.7" size="1.778" layer="90">TODO:
+Replace linear regulator with a buck 
+regulator to decrease power dissipation.</text>
 </plain>
 <instances>
 <instance part="P+2" gate="1" x="20.32" y="325.12" rot="R90"/>

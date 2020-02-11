@@ -9595,8 +9595,8 @@ Source: &lt;a href="http://www.irf.com/product-info/datasheets/data/irf8313pbf.p
 <part name="IC1" library="sm_ilec_supply" deviceset="VREG" device="_TO220L_A" value="LM1086-ADJ"/>
 <part name="C3" library="rcl" deviceset="C-EU" device="C1206" value="10u"/>
 <part name="GND27" library="supply1" deviceset="GND" device=""/>
-<part name="R16" library="rcl" deviceset="R-EU_" device="R0805" value="132"/>
-<part name="R28" library="rcl" deviceset="R-EU_" device="R0805" value="1k1"/>
+<part name="R16" library="rcl" deviceset="R-EU_" device="R0805" value="132 (220||330)"/>
+<part name="R28" library="rcl" deviceset="R-EU_" device="R0805" value="1k1 (2k2||2k2)"/>
 <part name="GND28" library="supply1" deviceset="GND" device=""/>
 <part name="JP1" library="pinhead" deviceset="PINHD-1X3" device="/90"/>
 <part name="R1" library="rcl" deviceset="R-EU_" device="R0805" value="1k"/>
@@ -9662,18 +9662,6 @@ polarity protection.</text>
 <text x="251.46" y="325.12" size="1.778" layer="90">TODO for next version:
 Connect UNO Vin to
 12V supply, not V_LED</text>
-<text x="38.1" y="266.7" size="1.778" layer="90">V_LED regulator:
-12V:
-  R16=132 = 220||330
-  R28=1k1=2k2/2
-3.5V:
-  R16=100R
-  R28=180=220||1k</text>
-<text x="424.18" y="332.74" size="1.778" layer="90">Resistors for RGB-LED:
-Red: 4.5R=20/4 || 47, 1/4W
-Green/Blue: 1R=2R/2,1/8W</text>
-<text x="251.46" y="332.74" size="1.778" layer="90">Drop D1 to allow shield to be 
-supplied from the Unos Vin.</text>
 </plain>
 <instances>
 <instance part="P+2" gate="1" x="20.32" y="325.12" rot="R90"/>
