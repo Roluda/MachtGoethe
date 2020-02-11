@@ -20,7 +20,7 @@
 // RFID config
 
 #define READER_TO_TEST  0
-#define NR_OF_READERS   1
+#define NR_OF_READERS   5
 
 //=============================================================================
 // Pin mapping

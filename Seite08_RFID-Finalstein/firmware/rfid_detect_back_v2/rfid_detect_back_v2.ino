@@ -20,7 +20,7 @@
 // Reader antenna gain: 1-7
 //   Higher values increases detection distance, but may be unreliably for short distances 
 //   7 only works with modified reader hardware.
-#define READER_GAIN     5   
+#define READER_GAIN     7
 
 // Required card UID (0 = don't care or use UID stored in EEPROM)
 #define REQUIRED_UID   0
@@ -78,6 +78,8 @@ void setup() {
       pinMode(led_pins[i], OUTPUT);
   }
 
+  pwm_init();
+  
   Serial.begin(115200);
   Serial.println(F("Hello"));
 
@@ -346,6 +348,30 @@ void test_rfid(void)
             pinMode(led_pins[0], OUTPUT);
         }
     }
+}
+
+
+// ================================================================================
+
+void pwm_init(void)
+{
+  // Increase PWM frequency
+  #ifdef TCCR0B
+    // NOTE: Do not change Timer 0 settings, since it controls some Arduino internals.
+    //TCCR0B = TCCR0B & 0b11111000 | 1;  // Timer 0 clk div 1
+  #endif
+  #ifdef TCCR1B
+      TCCR1B = TCCR1B & 0b11111000 | 1;  // Timer 1 clk div 1
+  #endif
+  #ifdef TCCR2B
+      TCCR2B = TCCR2B & 0b11111000 | 1;  // Timer 2 clk div 1
+  #endif
+  #ifdef TCCR3B
+    TCCR3B = TCCR3B & 0b11111000 | 1;  // Timer 3 clk div 1
+  #endif
+  #ifdef TCCR4B
+    TCCR4B = TCCR4B & 0b11110000 | 1;  // Timer 4 clk div 1
+  #endif  
 }
 
 // ================================================================================
