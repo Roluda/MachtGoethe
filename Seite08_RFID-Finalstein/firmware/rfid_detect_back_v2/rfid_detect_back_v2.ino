@@ -118,7 +118,6 @@ void setup() {
 // ================================================================================
 
 void loop() {
-
     // Hard-reset reader
     digitalWrite(RST_PIN, 0);  delay(1);
     digitalWrite(RST_PIN, 1);  delay(50);
@@ -264,9 +263,50 @@ void learn_uid(void)
     }
     Serial.println("TIMEOUT, STOP LEARNING");
 }
+
+// ================================================================================
+// Additive color type (RGB + Alpha)
+
+struct RGBA {
+  uint8_t red, green, blue, alpha;
+  RGBA(uint8_t r=0, uint8_t g=0, uint8_t b=0, uint8_t a=0) : red(r), green(g), blue(b), alpha(a) {};
+  RGBA operator * (const uint8_t s) {  // scalar multiplication: dim intensity to alpha *= s/256
+    return RGBA( red, green, blue, ((uint16_t)alpha * s + 255) >> 8);
+  }
+};
+
+// Example colors
+const RGBA Red    (255, 0,   0,   255);
+const RGBA Green  (0,   255, 0,   255);
+const RGBA Blue   (0,   0,   255, 255);
+const RGBA Yellow (255, 255, 0,   180);
+const RGBA Cyan   (0,   255, 255, 180);
+const RGBA Magenta(255, 0  , 255, 180);
+
+// ================================================================================
+// Set LED to RGBA color
+
+void set_color( uint8_t r, uint8_t g, uint8_t b, uint8_t a)
+{
+  r = ((uint16_t)r * a + 255)>>8;
+  g = ((uint16_t)g * a + 255)>>8;
+  b = ((uint16_t)b * a + 255)>>8;
+  analogWrite( led_pins[0], r );
+  analogWrite( led_pins[1], g );
+  analogWrite( led_pins[2], b );
+}
+
+void set_color( struct RGBA rgba )
+{
+  set_color( rgba.red, rgba.green, rgba.blue, rgba.alpha );
+}
+
           
 // ================================================================================
 // LED animation on success
+
+RGBA colors[] = { Red, Green, Blue, Yellow, Magenta };
+#define N_COLORS (sizeof(colors)/sizeof(colors[0]))
 
 #define FADE_DELAY  0
 #define FADE_MAX    150
@@ -281,35 +321,37 @@ void led_animation_off(void)
 
 void led_animation_step(void)
 {
-  static uint32_t last_time;
-  static int16_t state_fade;
-  static uint8_t state_led, state_dir;
+  static struct {
+    uint32_t last_time;
+    int16_t fade;
+    uint8_t color, dir;
+  } state;
 
-  if ((FADE_DELAY > 0) && (millis() - last_time < FADE_DELAY))
+  if ((FADE_DELAY > 0) && (millis() - state.last_time < FADE_DELAY))
       return;
-  last_time += FADE_DELAY;
+  state.last_time += FADE_DELAY;
 
-  if (state_dir == 1)
+  if (state.dir == 1)
   {
-    if (state_fade < FADE_MAX) {
-      state_fade += FADE_STEP;
+    if (state.fade < FADE_MAX) {
+      state.fade += FADE_STEP;
     }
     else {
-      state_dir = 0;
+      state.dir = 0;
     }
   }
-  else { // state_dir == 0
-    if (state_fade > 0) {
-      state_fade -= FADE_STEP;
+  else { // state.dir == 0
+    if (state.fade > 0) {
+      state.fade -= FADE_STEP;
     }
     else {
-      state_dir = 1;
-      if (++state_led > 2)  state_led = 0;
+      state.dir = 1;
+      if (++state.color >= N_COLORS)  state.color = 0;
     }
   }
-  if (state_fade > FADE_MAX)  state_fade = FADE_MAX;
-  if (state_fade < 0)  state_fade = 0;
-  analogWrite(led_pins[state_led], state_fade);
+  if (state.fade > FADE_MAX)  state.fade = FADE_MAX;
+  if (state.fade < 0)  state.fade = 0;
+  set_color( colors[state.color] * state.fade );
 }
 
 // ================================================================================

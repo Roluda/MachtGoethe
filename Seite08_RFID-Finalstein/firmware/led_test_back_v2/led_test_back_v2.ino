@@ -104,17 +104,25 @@ void test_fade(void)
 }
 
 // ================================================================================
+// Additive color type (RGB + Alpha)
 
 struct RGBA {
   uint8_t red, green, blue, alpha;
   RGBA(uint8_t r=0, uint8_t g=0, uint8_t b=0, uint8_t a=0) : red(r), green(g), blue(b), alpha(a) {};
-  
-  
+  RGBA operator * (const uint8_t s) {  // scalar multiplication
+    return RGBA( red, green, blue, ((uint16_t)alpha * s + 255) >> 8);
+  }
 };
 
+const RGBA Red    (255, 0,   0,   255);
+const RGBA Green  (0,   255, 0,   255);
+const RGBA Blue   (0,   0,   255, 255);
+const RGBA Yellow (255, 255, 0,   180);
+const RGBA Cyan   (0,   255, 255, 180);
+const RGBA Magenta(255, 0  , 255, 180);
 
-RGBA Yellow(255,255,0,255);
-
+// ================================================================================
+// Set LED to RGBA color
 
 void set_color( uint8_t r, uint8_t g, uint8_t b, uint8_t a)
 {
@@ -132,22 +140,26 @@ void set_color( struct RGBA rgba )
 }
 
 // ================================================================================
+// Fading color change effect
+
+RGBA colors[] = { Red, Green, Blue, Yellow, Cyan, Magenta };
+#define N_COLORS (sizeof(colors)/sizeof(colors[0]))
 
 #define FADE_DELAY  5
 #define FADE_MAX    50
 
-
-
 void test_color(void)
 {
+  for (uint8_t col=0; col<N_COLORS; col++)  {
     for (int16_t j=1; j<FADE_MAX; j++) {
-      set_color( 255,255,0,j);
+      set_color( colors[col] * j );
       delay(FADE_DELAY);
     }
     for (int16_t j=FADE_MAX; j>=0; j--) {
-      set_color( 255,255,0,j);
+      set_color( colors[col] * j );
       delay(FADE_DELAY);
     }
+  }
 }
 
 // ================================================================================
