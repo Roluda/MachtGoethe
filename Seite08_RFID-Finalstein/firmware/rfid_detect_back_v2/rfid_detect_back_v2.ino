@@ -20,7 +20,7 @@
 // Reader antenna gain: 1-7
 //   Higher values increases detection distance, but may be unreliably for short distances 
 //   7 only works with modified reader hardware.
-#define READER_GAIN     7
+#define READER_GAIN     5
 
 // Required card UID (0 = don't care or use UID stored in EEPROM)
 #define REQUIRED_UID   0
@@ -178,11 +178,16 @@ void loop() {
         }
 
         mfrc522.PCD_SoftPowerDown();
+
+        // Debounce success out
+        static uint8_t success = 0;
+        if (detect) success = 4;
+        else if (success > 0) success--;
         
         // Test for success condition
-        digitalWrite(SUCCESS_OUT_PIN, detect);
-        if (detect)  led_animation_step();
-        else         led_animation_off();
+        digitalWrite(SUCCESS_OUT_PIN, success);
+        if (success)  led_animation_step();
+        else          led_animation_off();
 
         // On errors, restart main loop (re-inits all readers)
         if (error) break;
@@ -269,19 +274,28 @@ void learn_uid(void)
 
 struct RGBA {
   uint8_t red, green, blue, alpha;
-  RGBA(uint8_t r=0, uint8_t g=0, uint8_t b=0, uint8_t a=0) : red(r), green(g), blue(b), alpha(a) {};
+  RGBA(uint8_t r=0, uint8_t g=0, uint8_t b=0, uint8_t a=255) : red(r), green(g), blue(b), alpha(a) {};
   RGBA operator * (const uint8_t s) {  // scalar multiplication: dim intensity to alpha *= s/256
     return RGBA( red, green, blue, ((uint16_t)alpha * s + 255) >> 8);
   }
 };
 
 // Example colors
-const RGBA Red    (255, 0,   0,   255);
-const RGBA Green  (0,   255, 0,   255);
-const RGBA Blue   (0,   0,   255, 255);
-const RGBA Yellow (255, 255, 0,   180);
-const RGBA Cyan   (0,   255, 255, 180);
-const RGBA Magenta(255, 0  , 255, 180);
+const RGBA 
+  Red    (255, 0,   0,   255),
+  Green  (0,   255, 0,   255),
+  Blue   (0,   0,   255, 255),
+  Yellow (255, 255, 0,   180),
+  Cyan   (0,   255, 255, 180),
+  Magenta(255, 0  , 255, 180);
+
+// Stone colors
+const RGBA 
+  Stone_Red   ( 255, 0,   0,   120 ),
+  Stone_Green ( 0,   255, 0,   220 ),
+  Stone_Blue  ( 0,   100, 255, 255 ),
+  Stone_Pink  ( 255,  86, 164, 120 ),
+  Stone_Yellow( 255, 255, 0,   120 );
 
 // ================================================================================
 // Set LED to RGBA color
@@ -305,7 +319,7 @@ void set_color( struct RGBA rgba )
 // ================================================================================
 // LED animation on success
 
-RGBA colors[] = { Red, Green, Blue, Yellow, Magenta };
+RGBA colors[] = { Stone_Red, Stone_Green, Stone_Blue, Stone_Pink, Stone_Yellow };
 #define N_COLORS (sizeof(colors)/sizeof(colors[0]))
 
 #define FADE_DELAY  0
