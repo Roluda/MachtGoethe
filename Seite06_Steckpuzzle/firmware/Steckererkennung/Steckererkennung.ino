@@ -24,7 +24,6 @@ void setup() {
 }
 
 void loop() {
-  delay(1000);
   ResetMeasure();
   for (int i = 0; i < measures; i++) {
     delay(measureInterval);
