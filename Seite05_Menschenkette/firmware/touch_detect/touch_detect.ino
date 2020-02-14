@@ -23,17 +23,20 @@
 
 #define PIN_SIGNAL_OUT  A1
 #define PIN_SIGNAL_IN   A0
-#define PIN_LED_DETECT  A4
-#define PIN_GND_DETECT  A5
+#define PIN_LED_DETECT  3
+#define PIN_GND_DETECT  8
 
-#define PIN_BOX_SIGNAL_OUT 2
 #define PIN_PREVIOUS_SOLVED_IN 6
 #define PIN_LOCK_SIGNAL_OUT 4
 
-#define SIGNAL_BIAS      512   // ADC bias level
-#define SIGNAL_THRES     150   // Detection threshold
-#define SIGNAL_DEB_MS    1000  // Debounce time for trigger
+// Box unlock output
+#define PIN_BOX_SIGNAL_OUT  2
+#define BOX_T_ACTIVE   5000  // Sustain active time
+#define BOX_POL_ACTIVE  LOW   // Active out polarity
 
+#define SIGNAL_BIAS      512   // ADC bias level
+#define SIGNAL_THRES     100   // Detection threshold
+#define SIGNAL_DEB_MS    500  // Debounce time for trigger
 
 
 //================================================================
@@ -44,14 +47,17 @@ void setup() {
   // Init pins
   digitalWrite( PIN_SIGNAL_OUT, 0 );
   pinMode( PIN_SIGNAL_OUT, OUTPUT );
-  
-  digitalWrite( PIN_LED_DETECT, 0 );
-  pinMode( PIN_LED_DETECT, OUTPUT );
 
-  digitalWrite( PIN_GND_DETECT, 0 );
-  pinMode( PIN_GND_DETECT, OUTPUT );
+  #ifdef PIN_LED_DETECT
+    digitalWrite( PIN_LED_DETECT, 0 );
+    pinMode( PIN_LED_DETECT, OUTPUT );
+  #endif
+  #ifdef PIN_GND_DETECT
+    digitalWrite( PIN_GND_DETECT, 0 );
+    pinMode( PIN_GND_DETECT, OUTPUT );
+  #endif
 
-  digitalWrite( PIN_BOX_SIGNAL_OUT, 1);
+  digitalWrite( PIN_BOX_SIGNAL_OUT, !BOX_POL_ACTIVE);
   pinMode( PIN_BOX_SIGNAL_OUT, OUTPUT);
 
   digitalWrite( PIN_LOCK_SIGNAL_OUT, 0);
@@ -167,13 +173,6 @@ void loop() {
       trigger = 0;
     }
 
-    if(trigger){
-      OpenBox();
-      if(digitalRead(PIN_PREVIOUS_SOLVED_IN)==LOW){
-        digitalWrite(PIN_LOCK_SIGNAL_OUT, HIGH);
-      }
-    }
-   
     // serial output to plot
     Serial.print(v_on);  
     Serial.print("  ");
@@ -183,11 +182,38 @@ void loop() {
     Serial.print("  ");
     Serial.print(trigger*100);
     Serial.println();
+
+    OpenBox(trigger);
+    if(trigger){      
+      if(digitalRead(PIN_PREVIOUS_SOLVED_IN)==LOW){
+        digitalWrite(PIN_LOCK_SIGNAL_OUT, HIGH);
+      }
+    }
+   
   }  
 }
 
-void OpenBox() {
-  digitalWrite(PIN_BOX_SIGNAL_OUT, LOW);
-  delay(5000);
-  digitalWrite(PIN_BOX_SIGNAL_OUT, HIGH);
+
+//=========================================================================================
+
+
+void OpenBox(bool trig) {
+  static uint32_t t_last_trig = 0;
+  static bool active = 0;
+  uint32_t t = millis();
+  if (trig) {
+    t_last_trig = t;
+    active = 1;
+  }
+  else if (active && (t - t_last_trig > BOX_T_ACTIVE)) {
+    active = 0;
+  }
+  if (active) {
+    digitalWrite(PIN_BOX_SIGNAL_OUT, BOX_POL_ACTIVE);
+  }
+  else {
+    digitalWrite(PIN_BOX_SIGNAL_OUT, !BOX_POL_ACTIVE);
+  }
 }
+
+//=========================================================================================
