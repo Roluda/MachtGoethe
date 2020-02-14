@@ -32,7 +32,7 @@
 // Box unlock output
 #define PIN_BOX_SIGNAL_OUT  2
 #define BOX_T_ACTIVE        5000   // (ms) Sustain active time
-#define BOX_POL_ACTIVE      LOW   // Active out polarity
+#define BOX_POL_ACTIVE      HIGH   // Active out polarity
 
 // Measurement signal
 #define SIGNAL_BIAS      512   // ADC bias level
