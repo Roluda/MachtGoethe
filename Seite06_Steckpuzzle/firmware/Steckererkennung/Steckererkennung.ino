@@ -75,6 +75,8 @@ void CompareRatios() {
       isOpen = true;
       OpenBox();
     }
+  }else{
+    isOpen = false;
   }
 }
 
