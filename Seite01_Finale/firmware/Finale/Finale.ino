@@ -16,6 +16,7 @@ long secondsPassed = 0;
 unsigned long lastMillis = 0;
 float timeLoseFactor = 1;
 bool gameOver = false;
+unsigned long gameOverTime = 0;
 bool finalStarted;
 
 TM1637Display display(CLK, DIO);
@@ -40,7 +41,10 @@ void setup()
   display.setBrightness(0x0f);
   display.clear();
   timerValue = initialSeconds * 1000;
+  pinMode(9, OUTPUT);
+  digitalWrite(9, LOW);
   tmrpcm.speakerPin = 9;
+  tmrpcm.pause();
 
 }
 
@@ -62,18 +66,27 @@ void loop() {
       secondsPassed = (millis() * timeLoseFactor) / 1000;
       if (digitalRead(FINWIN)) {
         Serial.println("WIN");
+        gameOverTime = millis();
         gameOver = true;
         tmrpcm.play("EndWin.wav");
       }
       if (timerValue <= 0) {
         timerValue = 0;
         gameOver = true;
+        gameOverTime = millis();
         tmrpcm.play("EndLoose.wav");
       }
+    } else if (millis() - gameOverTime > 600000) {
+      gameOver = false;
+      finalStarted=false;
+      display.setBrightness(0x0f);
+      display.clear();
+      timerValue = initialSeconds * 1000;
+      return;
     }
     display.showNumberDecEx(getTimeFormat(timerValue), 0b01000000, true);
   }
-  if(!tmrpcm.isPlaying()){
+  if (!tmrpcm.isPlaying()) {
     tmrpcm.disable();
   }
 }

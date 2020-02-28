@@ -71,9 +71,12 @@ bool inMelody = false;
 bool rightMelody = false;
 bool finalStarted = false;
 int beforePlayed = 0;
+unsigned long timeOfFinalStart = 0;
+bool won = false;
 
 void setup() {
   Serial.begin(9600);
+  Serial.println("HELLO");
   pinMode(LED1R, OUTPUT);
   pinMode(LED1G, OUTPUT);
   pinMode(LED1B, OUTPUT);
@@ -94,6 +97,7 @@ void setup() {
 void loop() {
   if (!finalStarted) {
     if (digitalRead(FinalStart)) {
+      timeOfFinalStart = millis();
       finalStarted = true;
       analogWrite(LED1G, 255);
       analogWrite(LED1R, 55);
@@ -101,23 +105,37 @@ void loop() {
       analogWrite(LED2R, 55);
     }
     if (digitalRead(BUTTON1) == LOW) {
+      Serial.println("BUTTON1 presssed");
       tone(8, NOTE_G2, 1000);
       delay(1000);
     }
     if (digitalRead(BUTTON2) == LOW) {
+      Serial.println("BUTTON1 presssed");
       tone(8, NOTE_G2, 1000);
       delay(1000);
     }
     if (digitalRead(BUTTON3) == LOW) {
+      Serial.println("BUTTON1 presssed");
       tone(8, NOTE_G2, 1000);
       delay(1000);
     }
     if (digitalRead(BUTTON4) == LOW) {
+      Serial.println("BUTTON1 presssed");
       tone(8, NOTE_G2, 1000);
       delay(1000);
     }
   }
   if (finalStarted) {
+    if (won) {
+      if (millis() - timeOfFinalStart > 600000) {
+        finalStarted = false;
+        won = false;
+        analogWrite(LED1G, 0);
+        analogWrite(LED2G, 0);
+        analogWrite(LED1R, 255);
+        analogWrite(LED2R, 255);
+      }
+    }
     Serial.println(digitalRead(BUTTON1));
     if (digitalRead(BUTTON1) == LOW) {
       Serial.println("Button1");
@@ -152,6 +170,7 @@ void loop() {
       playMelodie(melody_Button4, noteDurations_Button4, length_Melody_Button4);
       if (rightMelody == true && beforePlayed == 3) {
         Serial.println("NOICE DU HAST GEWONNEN!!!!!!");
+        won = true;
         OpenBox();
       }
       else {
@@ -174,7 +193,7 @@ void playMelodie(int Notes[], int Duration[], int length_Melody) {
     // to calculate the note duration, take one second divided by the note type.
     //e.g. quarter note = 1000 / 4, eighth note = 1000/8, etc.
     int noteDuration = 2000 / Duration[thisNote];
-    tone(8, Notes[thisNote]*2 , noteDuration);
+    tone(8, Notes[thisNote] * 2 , noteDuration);
 
     // to distinguish the notes, set a minimum time between them.
     // the note's duration + 30% seems to work well:

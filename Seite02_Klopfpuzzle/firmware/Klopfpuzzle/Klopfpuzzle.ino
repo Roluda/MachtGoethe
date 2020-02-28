@@ -2,7 +2,7 @@
 #define BoxRelais A3
 #define DoneOutput A1
 
-float knock_th = 50;
+float knock_th = 100;
 int currentKnock = 0;
 int pattern[] = {0, 0, 0,0,0, 0,0,0,0, 0, 0,0,0,0,3}; //0 = any delta to last; 1= short delta to last, 2= long delta to last , 3=end
 unsigned long shortKnock = 0;

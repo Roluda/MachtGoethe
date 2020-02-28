@@ -21,11 +21,11 @@
 // Individual reader gain setting (1-7). 7 only works with modified hardware.
 // Higer values: Increase detection distance, but worse detection at
 //               smaller distances.
-#define READER_GAIN_0     7  
-#define READER_GAIN_1     7
-#define READER_GAIN_2     7
-#define READER_GAIN_3     7
-#define READER_GAIN_4     7
+#define READER_GAIN_0     5  
+#define READER_GAIN_1     4
+#define READER_GAIN_2     6
+#define READER_GAIN_3     5
+#define READER_GAIN_4     5
 
 // Required card UIDs (0 = don't care)
 #define UID_0   0

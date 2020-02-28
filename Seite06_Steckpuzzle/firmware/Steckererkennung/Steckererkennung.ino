@@ -7,7 +7,7 @@ const int outputs[] = {3, 5, 6, 9, 10};
 int measures = 1000;
 unsigned long measureInterval = 2;
 int highs[5];
-float goals[] = {0.1, 0.3, 0.5, 0.7, 0.9};
+float goals[] = {0.1, 0.3, 0.6, 0.7, 0.9};
 float measureTolerance = 0.05;
 bool isOpen = false;
 

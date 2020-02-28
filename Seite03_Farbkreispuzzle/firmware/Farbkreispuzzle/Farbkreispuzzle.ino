@@ -9,9 +9,9 @@
 int sensorValueGreen = 0;
 int sensorValueRed = 0;
 int sensorValueBlue = 0;
-int greenThreshold = 500;
-int redThreshold = 600;
-int blueThreshold = 740;
+int greenThreshold = 225;
+int redThreshold = 175;
+int blueThreshold = 190;
 
 bool solved = false;
 
